@@ -38,6 +38,9 @@
     </Filter>
     <Filter Include="Labs\OVRKill">
       <UniqueIdentifier>{d4fdf9a6-dec9-41c6-a284-39e14bda0d61}</UniqueIdentifier>
+	  </Filter>
+    <Filter Include="assignment">
+      <UniqueIdentifier>{2acafb3f-5cca-49e6-a678-aac5be967120}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="VRGame.cpp">
       <Filter>Games</Filter>
+	   </ClCompile>
+    <ClCompile Include="Assignment.cpp">
+      <Filter>assignment</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsDrawer.cpp">
       <Filter>Source Files</Filter>
@@ -384,6 +390,9 @@
     </ClInclude>
     <ClInclude Include="VRGame.h">
       <Filter>Games</Filter>
+  </ClInclude>
+    <ClInclude Include="Assignment.h">
+      <Filter>assignment</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsDrawer.h" />
   </ItemGroup>
