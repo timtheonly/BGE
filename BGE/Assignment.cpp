@@ -21,6 +21,7 @@ bool Assignment::Initialise()
 	hat->position = glm::vec3(0,1,-1);
 	Attach(hat);
 
+	fullscreen = false;
 	width = 800;
 	height = 600;
 
