@@ -8,34 +8,43 @@ bool ExpansionEffect::Initialise()
 	{
 		Particle p;
 		InitParticle(p);
+		if(i %10  == 0)
+		{
+			row++;	
+			angle=0.0f;
+		}
 		particles.push_back(p);
 	}
 	return ParticleEffect::Initialise();
 }
 
+ExpansionEffect::ExpansionEffect(void)
+{
+	numParticals = 20;
+	angle =0.0f;
+	row = 1;
+	angleIncrement = (glm::pi<float>()*2)/numParticals;
+	diffuse = glm::vec3(0,0,1);
+}
 
 void ExpansionEffect::InitParticle(Particle & p)
 {
 	float radius = 0.75f;
-	if(angle > (glm::pi<float>()*2))
-	{
-		angle = 0.0f;
-	}
 	angle += angleIncrement;
 
-	p.position.x =  1.5 * glm::cos(angle);
-	p.position.z =  1.5 * glm::sin(angle);
+	p.position.x =  (row*0.25f) * glm::cos(angle);
+	p.position.z =  (row*0.25f) * glm::sin(angle);
+	p.position.y = row * 0.5;
 
 	p.diffuse.a = 1.0f;
-	p.age = 0;
-	p.alive = true;
-	p.size = 50;
-	p.lifetime = 10.0f;
+	p.size = 10;
+
 }
 
 void ExpansionEffect::UpdateParticle(float timeDelta, Particle & p)
 {
-	glm::vec3 direction = p.position  - position;
+	glm::vec3 distance = p.position - position;
+	glm::vec3 direction = distance;
 	direction.y=0;
 	direction = glm::normalize(direction);
 
@@ -44,8 +53,8 @@ void ExpansionEffect::UpdateParticle(float timeDelta, Particle & p)
 	
 	p.position += p.velocity * timeDelta;
 
-	glm::vec3 distance = p.position - position;
-	if(glm::length(distance) > 10)
+	
+	if(glm::length(distance) > 100)
 	{
 		InitParticle(p);
 	}
@@ -55,15 +64,6 @@ void ExpansionEffect::Update(float timeDelta)
 {
 	ParticleEffect::Update(timeDelta);
 }
-
-ExpansionEffect::ExpansionEffect(void)
-{
-	numParticals = 10;
-	angle =0.0f;
-	angleIncrement = (glm::pi<float>()*2)/numParticals;
-	diffuse = glm::vec3(0,0,1);
-}
-
 
 ExpansionEffect::~ExpansionEffect(void)
 {

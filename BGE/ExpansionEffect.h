@@ -15,5 +15,6 @@ namespace BGE
 		int numParticals;
 		float angle;
 		float angleIncrement;
+		int row;
 	};
 }
