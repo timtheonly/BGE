@@ -217,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="PhysicsDrawer.cpp">
       <Filter>Source Files</Filter>
+</ClCompile>
+    <ClCompile Include="ExpansionEffect.cpp">
+      <Filter>assignment</Filter>t
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +398,9 @@
       <Filter>assignment</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsDrawer.h" />
+    <ClInclude Include="ExpansionEffect.h">
+      <Filter>assignment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\CubeShader.fragmentshader">

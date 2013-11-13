@@ -1,7 +1,7 @@
 #pragma once
 #include "Game.h"
 #include "GameComponent.h"
-#include "FountainEffect.h"
+#include "ExpansionEffect.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ namespace BGE
 	public:
 		float effectTheta;
 		float effectYSpeed;
-		shared_ptr<FountainEffect> hatFountain;
+		shared_ptr<ExpansionEffect> hatFountain;
 		shared_ptr<GameComponent> hat;
 		Assignment(void);
 		~Assignment(void);
