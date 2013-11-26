@@ -13,8 +13,10 @@ namespace BGE
 		void InitParticle(Particle & particle);
 		void UpdateParticle(float timeDelta, Particle & particle);
 		int numParticals;
-		float angle;
-		float angleIncrement;
-		int row;
+		float theta;
+		float phi;
+		float phiIncrement;
+		float thetaIncrement;
+		
 	};
 }

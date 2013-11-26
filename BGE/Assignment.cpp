@@ -29,7 +29,7 @@ bool Assignment::Initialise()
 	height = 600;
 
 	hatFountain = make_shared<ExpansionEffect>();
-	hatFountain->position = hat->position;
+	hatFountain->position =hat->position;
 	hatFountain->diffuse = glm::vec3(1,0,1);
 	Attach(hatFountain);
 	Game::Initialise();

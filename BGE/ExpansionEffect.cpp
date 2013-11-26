@@ -8,11 +8,6 @@ bool ExpansionEffect::Initialise()
 	{
 		Particle p;
 		InitParticle(p);
-		if(i %10  == 0)
-		{
-			row++;	
-			angle=0.0f;
-		}
 		particles.push_back(p);
 	}
 	return ParticleEffect::Initialise();
@@ -20,24 +15,26 @@ bool ExpansionEffect::Initialise()
 
 ExpansionEffect::ExpansionEffect(void)
 {
-	numParticals = 20;
-	angle =0.0f;
-	row = 1;
-	angleIncrement = (glm::pi<float>()*2)/numParticals;
+	numParticals = 1000;
+	theta  = glm::pi<float>();
+	phi = 0;
+	thetaIncrement = (glm::pi<float>()*2)/numParticals;
+	phiIncrement = 0.1f;
 	diffuse = glm::vec3(0,0,1);
 }
 
 void ExpansionEffect::InitParticle(Particle & p)
 {
-	float radius = 0.75f;
-	angle += angleIncrement;
+	float radius = 3.5f;
+	theta += thetaIncrement;
+	phi += phiIncrement;
 
-	p.position.x =  (row*0.25f) * glm::cos(angle);
-	p.position.z =  (row*0.25f) * glm::sin(angle);
-	p.position.y = row * 0.5;
+	p.diffuse = glm::vec4(RandomClamped(0,1),RandomClamped(0,0.5f),0,1);
+	p.position.x =   glm::cos(theta) * glm::cos(phi) *radius;
+	p.position.y =  glm::sin(phi) *radius;
+	p.position.z =  glm::cos(theta)* glm::sin(phi) * radius;
 
-	p.diffuse.a = 1.0f;
-	p.size = 10;
+	p.size = RandomClamped(10,15);
 
 }
 
@@ -45,16 +42,13 @@ void ExpansionEffect::UpdateParticle(float timeDelta, Particle & p)
 {
 	glm::vec3 distance = p.position - position;
 	glm::vec3 direction = distance;
-	direction.y=0;
 	direction = glm::normalize(direction);
 
-	p.velocity = glm::vec3(10);
+	p.velocity = glm::vec3(5);
 	p.velocity *= direction;
-	
 	p.position += p.velocity * timeDelta;
 
-	
-	if(glm::length(distance) > 100)
+	if(glm::length(distance) > 5)
 	{
 		InitParticle(p);
 	}
