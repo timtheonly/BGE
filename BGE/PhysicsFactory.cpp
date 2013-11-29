@@ -37,6 +37,7 @@ void PhysicsFactory::CreateWall(glm::vec3 startAt, float width, float height, fl
 	}
 }
 
+
 shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::vec3 pos, glm::quat quat, glm::vec3 scale)
 {
 	shared_ptr<GameComponent> component = make_shared<GameComponent>();

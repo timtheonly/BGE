@@ -1,11 +1,17 @@
 #include "Assignment.h"
 #include "Content.h"
+#include <btBulletDynamicsCommon.h>
 using namespace BGE;
 
 Assignment::Assignment(void)
 {
 	effectYSpeed = 0.5f;
 	effectTheta = 0;
+	physicsFactory = NULL;
+	dynamicsWorld = NULL;
+	broadphase = NULL;
+	dispatcher = NULL;
+	solver = NULL;
 }
 
 
@@ -15,26 +21,42 @@ Assignment::~Assignment(void)
 
 bool Assignment::Initialise()
 {
-	std::shared_ptr<GameComponent> ground = make_shared<Ground>();
-	Attach(ground);
+	// Set up the collision configuration and dispatcher
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+ 
+    // The world.
+	btVector3 worldMin(-1000,-1000,-1000);
+	btVector3 worldMax(1000,1000,1000);
+	broadphase = new btAxisSweep3(worldMin,worldMax);
+	solver = new btSequentialImpulseConstraintSolver();
+	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
+    dynamicsWorld->setGravity(btVector3(0,-9,0));
+
+	physicsFactory = make_shared<PhysicsFactory>(dynamicsWorld);
+
+	physicsFactory->CreateGroundPhysics();
+	physicsFactory->CreateCameraPhysics();
 
 	hat = make_shared<GameComponent>();
-	hat->Attach(Content::LoadModel("hat"));
+	
 	hat->position = glm::vec3(0,1,-1);
 	hat->diffuse= glm::vec3(0.0f,0.0f,1.0f);
+	hat->Attach(physicsFactory->CreateFromModel("hat",hat->position,glm::quat(),glm::vec3(1)));
 	Attach(hat);
 
 	fullscreen = false;
 	width = 800;
 	height = 600;
 
-	hatFountain = make_shared<ExpansionEffect>();
+	/*hatFountain = make_shared<ExpansionEffect>();
 	hatFountain->position =hat->position;
 	hatFountain->diffuse = glm::vec3(1,0,1);
-	Attach(hatFountain);
-	Game::Initialise();
+	Attach(hatFountain);*/
 
-	camera->GetController()->position = glm::vec3(0, 4, 20);
+	if (!Game::Initialise()) {
+		return false;
+	}
 	return true;
 }
 
@@ -55,12 +77,15 @@ void Assignment::Update(float gameTime)
 		effectYSpeed = -effectYSpeed;
 	}*/
 	
+	dynamicsWorld->stepSimulation(gameTime,100);
+	
+	/*
 	effectTheta += gameTime;
 	if(effectTheta >= glm::pi<float>() *2)
 	{
 		effectTheta = 0;
 	}
-	/*
+	
 	hatFountain->position.x = glm::cos(effectTheta);
 	hatFountain->position.z = glm::sin(effectTheta);
 	hatFountain->position.y += effectYSpeed * gameTime;*/
