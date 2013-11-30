@@ -45,9 +45,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::
 	component->scale = scale;
 	Game::Instance()->Attach(component);
 	shared_ptr<Model> model = Content::LoadModel(name);
-	component->specular = glm::vec3(1.2f, 1.2f, 1.2f);
 	model->Initialise();
-	component->Attach(model);
 
 	std::vector<glm::vec3>::iterator it = model->vertices.begin(); 	
 	btConvexHullShape * tetraShape = new btConvexHullShape();
@@ -66,8 +64,8 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::
 	btDefaultMotionState * motionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
 		,GLToBtVector(pos)));	
 	
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,motionState, tetraShape, inertia);
-	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass,motionState, tetraShape, inertia);
+	btRigidBody * body = new btRigidBody(rigidBodyCI);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 	dynamicsWorld->addRigidBody(body);
 
@@ -240,7 +238,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateGroundPhysics()
 	body->setFriction(100);
 	dynamicsWorld->addRigidBody(body);
 	body->setUserPointer(ground.get());
-	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	shared_ptr<PhysicsController> groundComponent (new PhysicsController(groundShape, body, groundMotionState));
 	groundComponent->tag = "Ground";
 	ground->Attach(groundComponent);	
@@ -280,3 +278,5 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateRandomObject(glm::vec3 point
 	string name = names[which];
 	return CreateFromModel(name, point, q, glm::vec3(3,3,3));
 }
+
+

@@ -29,7 +29,7 @@ void ExpansionEffect::InitParticle(Particle & p)
 	theta += thetaIncrement;
 	phi += phiIncrement;
 
-	p.diffuse = glm::vec4(RandomClamped(0,1),RandomClamped(0,0.5f),0,1);
+	p.diffuse = glm::vec4(RandomClamped(0,1),RandomClamped(0,0.5f),1,1);
 	p.position.x =   glm::cos(theta) * glm::cos(phi) *radius;
 	p.position.y =  glm::sin(phi) *radius;
 	p.position.z =  glm::cos(theta)* glm::sin(phi) * radius;
@@ -44,7 +44,7 @@ void ExpansionEffect::UpdateParticle(float timeDelta, Particle & p)
 	glm::vec3 direction = distance;
 	direction = glm::normalize(direction);
 
-	p.velocity = glm::vec3(5);
+	p.velocity = glm::vec3(10);
 	p.velocity *= direction;
 	p.position += p.velocity * timeDelta;
 

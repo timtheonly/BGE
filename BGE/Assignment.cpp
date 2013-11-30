@@ -39,7 +39,7 @@ bool Assignment::Initialise()
 	physicsFactory->CreateCameraPhysics();
 
 	hat = make_shared<GameComponent>();
-	
+	hat->Attach(Content::LoadModel("hat"));
 	hat->position = glm::vec3(0,1,-1);
 	hat->diffuse= glm::vec3(0.0f,0.0f,1.0f);
 	hat->Attach(physicsFactory->CreateFromModel("hat",hat->position,glm::quat(),glm::vec3(1)));
@@ -50,10 +50,10 @@ bool Assignment::Initialise()
 	height = 600;
 
 	physicsFactory->CreateCylinder(5.0f,4.0f,glm::vec3(0,0,1),glm::quat());
-	/*hatFountain = make_shared<ExpansionEffect>();
+	hatFountain = make_shared<ExpansionEffect>();
 	hatFountain->position =hat->position;
 	hatFountain->diffuse = glm::vec3(1,0,1);
-	Attach(hatFountain);*/
+	Attach(hatFountain);
 
 	if (!Game::Initialise()) {
 		return false;
@@ -91,4 +91,9 @@ void Assignment::Update(float gameTime)
 	hatFountain->position.z = glm::sin(effectTheta);
 	hatFountain->position.y += effectYSpeed * gameTime;*/
 	Game::Update(gameTime);
+}
+
+void Assignment::Cleanup()
+{
+	Game::Cleanup();
 }

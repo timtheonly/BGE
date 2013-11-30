@@ -29,7 +29,8 @@ namespace BGE
 		~Assignment(void);
 		bool Initialise();
 		void Update(float timeDelta);
-			
+		void Cleanup();
+		
 		// The world.
 		std::shared_ptr<PhysicsFactory> physicsFactory;
 		btDiscreteDynamicsWorld * dynamicsWorld;
