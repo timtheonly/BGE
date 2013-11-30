@@ -49,6 +49,7 @@ bool Assignment::Initialise()
 	width = 800;
 	height = 600;
 
+	physicsFactory->CreateCylinder(5.0f,4.0f,glm::vec3(0,0,1),glm::quat());
 	/*hatFountain = make_shared<ExpansionEffect>();
 	hatFountain->position =hat->position;
 	hatFountain->diffuse = glm::vec3(1,0,1);

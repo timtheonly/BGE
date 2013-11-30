@@ -66,8 +66,8 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::
 	btDefaultMotionState * motionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
 		,GLToBtVector(pos)));	
 	
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass,motionState, tetraShape, inertia);
-	btRigidBody * body = new btRigidBody(rigidBodyCI);
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,motionState, tetraShape, inertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 	dynamicsWorld->addRigidBody(body);
 
