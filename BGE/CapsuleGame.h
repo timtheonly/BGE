@@ -1,16 +1,12 @@
 #pragma once
-#include "Game.h"
-#include "GameComponent.h"
-#include "PhysicsController.h"
+#include "game.h"
 #include "PhysicsFactory.h"
-#include "ExpansionEffect.h"
 
-using namespace std;
+using namespace BGE;
 
-namespace BGE
+class CapsuleGame :
+	public Game
 {
-	class Assignment : public  Game
-	{
 	private:
 		btBroadphaseInterface* broadphase;
  
@@ -21,19 +17,15 @@ namespace BGE
 		// The actual physics solver
 		btSequentialImpulseConstraintSolver * solver;
 	public:
-		float effectTheta;
-		float effectYSpeed;
-		shared_ptr<ExpansionEffect> hatFountain;
-		shared_ptr<GameComponent> hat;
-		Assignment(void);
-		~Assignment(void);
+		CapsuleGame(void);
+		~CapsuleGame(void);
 		bool Initialise();
 		void Update(float timeDelta);
 		void Cleanup();
+		void CreateWall();
 		
 		// The world.
 		std::shared_ptr<PhysicsFactory> physicsFactory;
 		btDiscreteDynamicsWorld * dynamicsWorld;
-	};
+};
 
-}

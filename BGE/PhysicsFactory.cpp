@@ -9,6 +9,8 @@
 #include "Model.h"
 #include "dirent.h"
 #include "Utils.h"
+#include "capsule.h"
+
 using namespace BGE;
 
 PhysicsFactory::PhysicsFactory(btDiscreteDynamicsWorld * dynamicsWorld)
@@ -100,6 +102,35 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::ve
 	sphere->Attach(sphereController);
 	sphereController->tag = "Sphere";	
 	return sphereController;
+}
+
+shared_ptr<PhysicsController> PhysicsFactory::CreateCapsule(float radius, float height, glm::vec3 pos, glm::quat quat)
+{
+	//make bullet shape
+	btCollisionShape *capShape = new btCapsuleShape(btScalar(radius),btScalar(height));
+	btScalar mass = 1;
+	btVector3 capInertia(0,0,0);
+	capShape->calculateLocalInertia(mass,capInertia);
+
+	//add the model
+	shared_ptr<Capsule>capsule = make_shared<Capsule>(radius, height);
+	capsule->position = pos;
+	Game::Instance()->Attach(capsule);
+
+	//create a rigid body
+	btDefaultMotionState *capMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat), GLToBtVector(pos)));
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, capMotionState, capShape,capInertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	dynamicsWorld->addRigidBody(body);
+	
+	//make the capsule a physical component
+	shared_ptr<PhysicsController> capControllor = make_shared<PhysicsController>(PhysicsController(capShape, body, capMotionState));
+	capControllor->tag = "Capsule";
+	body->setUserPointer(capControllor.get());
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+	capsule->Attach(capControllor);
+
+	return capControllor;
 }
 
 

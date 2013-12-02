@@ -19,7 +19,7 @@
 #include "Lab7.h"
 #include "Lab8.h"
 #include "Buddha.h"
-#include "Assignment.h"
+#include "CapsuleGame.h"
 
 
 using namespace BGE;
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	// Uncomment this line to run the Rift/Connect/Physics demo as per 
 	// http://www.youtube.com/watch?v=EEbVHxOkTxw
 
-	Assignment game;
+	CapsuleGame game;
 
 
 	game.Run();
