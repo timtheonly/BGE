@@ -81,12 +81,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Assignment.cpp" />
     <ClCompile Include="AttackingState.cpp" />
     <ClCompile Include="Buddha.cpp" />
+    <ClCompile Include="Capsule.cpp" />
+    <ClCompile Include="CapsuleGame.cpp" />
     <ClCompile Include="ExpansionEffect.cpp" />
     <ClCompile Include="FlockingScenario.cpp" />
     <ClCompile Include="FountainEffect.cpp" />
+    <ClCompile Include="GLDebugDrawer.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="Lab4.cpp" />
     <ClCompile Include="Lab5.cpp" />
@@ -142,12 +144,14 @@
     <ClCompile Include="XBoxController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Assignment.h" />
     <ClInclude Include="AttackingState.h" />
     <ClInclude Include="Buddha.h" />
+    <ClInclude Include="Capsule.h" />
+    <ClInclude Include="CapsuleGame.h" />
     <ClInclude Include="ExpansionEffect.h" />
     <ClInclude Include="FlockingScenario.h" />
     <ClInclude Include="FountainEffect.h" />
+    <ClInclude Include="GLDebugDrawer.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="Lab4.h" />
     <ClInclude Include="Lab5.h" />

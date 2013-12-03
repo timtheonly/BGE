@@ -107,7 +107,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::ve
 shared_ptr<PhysicsController> PhysicsFactory::CreateCapsule(float radius, float height, glm::vec3 pos, glm::quat quat)
 {
 	//make bullet shape
-	btCollisionShape *capShape = new btCapsuleShape(btScalar(radius),btScalar(height));
+	btCollisionShape *capShape = new btCapsuleShape(radius,height);
 	btScalar mass = 1;
 	btVector3 capInertia(0,0,0);
 	capShape->calculateLocalInertia(mass,capInertia);

@@ -2,6 +2,7 @@
 #include "GameComponent.h"
 #include <btBulletDynamicsCommon.h>
 
+
 namespace BGE
 {
 	class PhysicsController :
