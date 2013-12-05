@@ -26,7 +26,7 @@ namespace BGE
 			void Cleanup();
 			void CreateWall();
 			std::shared_ptr<PhysicsController> caps;
-		
+			std::shared_ptr<PhysicsController> cube;
 			// The world.
 			std::shared_ptr<PhysicsFactory> physicsFactory;
 			btDiscreteDynamicsWorld * dynamicsWorld;

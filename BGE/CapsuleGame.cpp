@@ -30,7 +30,7 @@ bool CapsuleGame::Initialise()
 	solver = new btSequentialImpulseConstraintSolver();
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-    dynamicsWorld->setGravity(btVector3(0,0,0));
+    dynamicsWorld->setGravity(btVector3(0,-9,0));
 	debugDraw = new GLDebugDrawer();
 	dynamicsWorld->setDebugDrawer(debugDraw);
 
@@ -39,12 +39,10 @@ bool CapsuleGame::Initialise()
 	physicsFactory->CreateGroundPhysics();
 	physicsFactory->CreateCameraPhysics();
 
-	caps =  physicsFactory->CreateCapsule(2.5f,6.0f,glm::vec3(1,0,-1),glm::quat());
+	caps =  physicsFactory->CreateCapsule(1.5f,1.5f,glm::vec3(1,0,-1),glm::quat());
+	cube = physicsFactory->CreateBox(1.5f,1.5f,1.5f,glm::vec3(5,0,-6),glm::quat());
+	physicsFactory->CreateRagDoll(glm::vec3(5,3,1));
 
-	shared_ptr<GameComponent> capsule = make_shared<Capsule>(2.5f,6.0f);
-	capsule->position = glm::vec3(1,0,-1);
-	capsule->orientation = glm::quat();
-	Attach(capsule);
 	return Game::Initialise();
 }
 
@@ -56,7 +54,7 @@ CapsuleGame::~CapsuleGame(void)
 void CapsuleGame::Update(float gameTime)
 {
 	dynamicsWorld->stepSimulation(gameTime,100);
-	debugDraw->drawCapsule(2.5f,3.0f,1,btTransform(GLToBtQuat(caps->orientation), GLToBtVector(caps->position)),btVector3(1,0,0));
+	//debugDraw->drawCapsule(btScalar(0.75),btScalar(0.3),1,btTransform(GLToBtQuat(caps->orientation), GLToBtVector(caps->position)),btVector3(1,0,0));
 	dynamicsWorld->debugDrawWorld();
 	Game::Update(gameTime);
 }
