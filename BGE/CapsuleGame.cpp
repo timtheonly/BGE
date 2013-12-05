@@ -39,7 +39,7 @@ bool CapsuleGame::Initialise()
 	physicsFactory->CreateGroundPhysics();
 	physicsFactory->CreateCameraPhysics();
 
-	caps =  physicsFactory->CreateCapsule(1.5f,1.5f,glm::vec3(1,0,-1),glm::quat());
+	caps =  physicsFactory->CreateCapsule(0.5f,0.5f,glm::vec3(1,0,-1),glm::quat());
 	cube = physicsFactory->CreateBox(1.5f,1.5f,1.5f,glm::vec3(5,0,-6),glm::quat());
 	physicsFactory->CreateRagDoll(glm::vec3(5,3,1));
 
@@ -54,7 +54,6 @@ CapsuleGame::~CapsuleGame(void)
 void CapsuleGame::Update(float gameTime)
 {
 	dynamicsWorld->stepSimulation(gameTime,100);
-	//debugDraw->drawCapsule(btScalar(0.75),btScalar(0.3),1,btTransform(GLToBtQuat(caps->orientation), GLToBtVector(caps->position)),btVector3(1,0,0));
 	dynamicsWorld->debugDrawWorld();
 	Game::Update(gameTime);
 }

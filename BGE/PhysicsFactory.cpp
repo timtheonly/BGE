@@ -107,15 +107,25 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::ve
 shared_ptr<PhysicsController> PhysicsFactory::CreateCapsule(float radius, float height, glm::vec3 pos, glm::quat quat)
 {
 	//make bullet shape
-	btCollisionShape *capShape = new btCapsuleShape(btScalar(radius*0.5),btScalar(height *0.5));
+	btCollisionShape *capShape = new btCapsuleShape(btScalar(radius),btScalar(height));
 	btScalar mass = 1;
 	btVector3 capInertia(0,0,0);
 	capShape->calculateLocalInertia(mass,capInertia);
 
-	//add the model
-	shared_ptr<Capsule>capsule = make_shared<Capsule>(radius, height);
+	//combine multiple models to create a capsule
+	shared_ptr<Cylinder>  capsule = make_shared<Cylinder>(radius, height);
 	capsule->position = pos;
+	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(radius);
+	sphere1->worldMode = GameComponent::from_self_with_parent;
+	sphere1->position = glm::vec3(0, +(height-radius)-0.25f,0);
+	capsule->Attach(sphere1);
+
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(radius);
+	sphere2->worldMode = GameComponent::from_self_with_parent;
+	sphere2->position = glm::vec3(0, -(height-radius)+0.25f,0);
+	capsule->Attach(sphere2);
 	Game::Instance()->Attach(capsule);
+	
 
 	//create a rigid body
 	btDefaultMotionState *capMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat), GLToBtVector(pos)));
