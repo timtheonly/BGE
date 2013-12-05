@@ -39,7 +39,6 @@ bool CapsuleGame::Initialise()
 	physicsFactory->CreateCameraPhysics();
 
 	caps =  physicsFactory->CreateCapsule(0.5f,0.5f,glm::vec3(1,0,-1),glm::quat());
-	sphere = physicsFactory->CreateSphere(0.3f,glm::vec3(5,0,-6),glm::quat());
 	physicsFactory->CreateRagDoll(glm::vec3(5,3,1));
 
 	return Game::Initialise();

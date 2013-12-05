@@ -115,11 +115,14 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCapsule(float radius, float 
 	//combine multiple models to create a capsule
 	shared_ptr<Cylinder>  capsule = make_shared<Cylinder>(radius, height);
 	capsule->position = pos;
+	
+	//add first cap
 	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(radius);
 	sphere1->worldMode = GameComponent::from_self_with_parent;
 	sphere1->position = glm::vec3(0, +(height-radius)-0.25f,0);
 	capsule->Attach(sphere1);
 
+	//add second cap
 	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(radius);
 	sphere2->worldMode = GameComponent::from_self_with_parent;
 	sphere2->position = glm::vec3(0, -(height-radius)+0.25f,0);

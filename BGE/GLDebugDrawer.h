@@ -1,6 +1,7 @@
 #pragma once
 #include <LinearMath\btIDebugDraw.h>
 
+//used for debugging Bullet Collision Shapes
 namespace BGE
 {
 	class GLDebugDrawer: public btIDebugDraw
