@@ -60,7 +60,6 @@
     <ClCompile Include="VRGame.cpp" />
     <ClCompile Include="XBoxController.cpp" />
     <ClCompile Include="CapsuleGame.cpp" />
-    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="GLDebugDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +123,6 @@
     <ClInclude Include="VRGame.h" />
     <ClInclude Include="XBoxController.h" />
     <ClInclude Include="CapsuleGame.h" />
-    <ClInclude Include="Capsule.h" />
     <ClInclude Include="GLDebugDrawer.h" />
   </ItemGroup>
   <ItemGroup>

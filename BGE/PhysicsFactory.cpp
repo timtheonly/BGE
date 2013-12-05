@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "dirent.h"
 #include "Utils.h"
-#include "capsule.h"
+
 
 using namespace BGE;
 
@@ -288,50 +288,50 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateRagDoll(glm::vec3 position)
 	
 	//add an arm
 	offset = glm::vec3(torsoWidth-0.25f,0,0);
-	bodyPart = CreateBox(torsoWidth/3,(torsoHeight/2),depth,position+offset,q);
+	bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
 	ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(-0.7,0.75,0),btVector3(0,0.3,0));
 	dynamicsWorld->addConstraint(ballAndSocket);
 
 	//add lower arm
 	offset = glm::vec3(torsoWidth-0.25,-(torsoHeight/2),0);
-	secondaryBodyPart = CreateBox(torsoWidth/3,(torsoHeight/3),depth,position+offset,q);
+	secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
 	hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
 	dynamicsWorld->addConstraint(hinge);
 
 	//add another arm
 	offset = glm::vec3(-(torsoWidth-0.25f),0,0);
-	bodyPart = CreateBox(torsoWidth/3,(torsoHeight/2),depth,position+offset,q);
+	bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
 	ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0.7,0.75,0),btVector3(0,0.3,0));
 	dynamicsWorld->addConstraint(ballAndSocket);
 
 	//add lower arm
 	offset = glm::vec3(-(torsoWidth-0.25),-(torsoHeight/2),0);
-	secondaryBodyPart = CreateBox(torsoWidth/3,(torsoHeight/3),depth,position+offset,q);
+	secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
 	hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
 	dynamicsWorld->addConstraint(hinge);
 
 	//add a leg
 	offset = glm::vec3((torsoWidth/2 - 0.25f),torsoHeight,0);
-	bodyPart = CreateBox(torsoWidth/3,(torsoHeight/2),depth,position+offset,q);
+	bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
 	ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,-0.75,0),btVector3(0,0.75,0));
 	dynamicsWorld->addConstraint(ballAndSocket);
 
 	//add lower leg
 	offset = glm::vec3(-(torsoWidth-0.25),-(torsoHeight/2),0);
-	secondaryBodyPart = CreateBox(torsoWidth/3,(torsoHeight/3),depth,position+offset,q);
+	secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
 	hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
 	dynamicsWorld->addConstraint(hinge);
 
 
 	//add another leg
-	offset = glm::vec3(-(torsoWidth/2 - 0.25f),torsoHeight,0);
-	bodyPart = CreateBox(torsoWidth/3,(torsoHeight/2),depth,position+offset,q);
-	ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,-0.75,0),btVector3(0,-0.75,0));
+	offset = glm::vec3((torsoWidth/2 + 0.25f),torsoHeight,0);
+	bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
+	ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,-0.75,0),btVector3(0,0.75,0));
 	dynamicsWorld->addConstraint(ballAndSocket);
 
 	//add lower leg
-	offset = glm::vec3((torsoWidth-0.25),-(torsoHeight/2),0);
-	secondaryBodyPart = CreateBox(torsoWidth/3,(torsoHeight/3),depth,position+offset,q);
+	offset = glm::vec3((torsoWidth + 0.25),-(torsoHeight/2),0);
+	secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
 	hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
 	dynamicsWorld->addConstraint(hinge);
 

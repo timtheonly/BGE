@@ -83,7 +83,6 @@
   <ItemGroup>
     <ClCompile Include="AttackingState.cpp" />
     <ClCompile Include="Buddha.cpp" />
-    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CapsuleGame.cpp" />
     <ClCompile Include="ExpansionEffect.cpp" />
     <ClCompile Include="FlockingScenario.cpp" />
@@ -146,7 +145,6 @@
   <ItemGroup>
     <ClInclude Include="AttackingState.h" />
     <ClInclude Include="Buddha.h" />
-    <ClInclude Include="Capsule.h" />
     <ClInclude Include="CapsuleGame.h" />
     <ClInclude Include="ExpansionEffect.h" />
     <ClInclude Include="FlockingScenario.h" />

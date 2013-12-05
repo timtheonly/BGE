@@ -1,5 +1,4 @@
 #include "CapsuleGame.h"
-#include "Capsule.h"
 #include "Utils.h"
 #include <btBulletDynamicsCommon.h>
 
@@ -40,7 +39,7 @@ bool CapsuleGame::Initialise()
 	physicsFactory->CreateCameraPhysics();
 
 	caps =  physicsFactory->CreateCapsule(0.5f,0.5f,glm::vec3(1,0,-1),glm::quat());
-	cube = physicsFactory->CreateBox(1.5f,1.5f,1.5f,glm::vec3(5,0,-6),glm::quat());
+	sphere = physicsFactory->CreateSphere(0.3f,glm::vec3(5,0,-6),glm::quat());
 	physicsFactory->CreateRagDoll(glm::vec3(5,3,1));
 
 	return Game::Initialise();
