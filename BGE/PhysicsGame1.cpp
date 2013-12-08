@@ -118,13 +118,6 @@ bool PhysicsGame1::Initialise()
 	ship1->position = glm::vec3(0, 0, -10);
 	station->Attach(ship1);
 	
-	std::shared_ptr<GameComponent> hat = make_shared<GameComponent>();
-	hat->Attach(Content::LoadModel("hat"));
-	hat->position = glm::vec3(0,1,-1);
-	hat->diffuse= glm::vec3(0.0f,0.0f,1.0f);
-	hat->scale =glm::vec3(1);
-	Attach(hat);
-
 	// A Ball and socket
 	box1 = physicsFactory->CreateBox(1,1,4, glm::vec3(20, 5, 0), glm::quat()); 
 	box2 = physicsFactory->CreateBox(1,1,4, glm::vec3(20, 5, 5), glm::quat()); 

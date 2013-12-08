@@ -103,6 +103,49 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::ve
 }
 
 
+shared_ptr<PhysicsController> PhysicsFactory::CreateCapsule(float radius, float height, glm::vec3 pos, glm::quat quat)
+{
+	//make bullet shape
+	btCollisionShape *capShape = new btCapsuleShape(btScalar(radius),btScalar(height));
+	btScalar mass = 1;
+	btVector3 capInertia(0,0,0);
+	capShape->calculateLocalInertia(mass,capInertia);
+
+	//combine multiple models to create a capsule
+	shared_ptr<Cylinder>  capsule = make_shared<Cylinder>(radius, height);
+	capsule->position = pos;
+	
+	//add first cap
+	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(radius);
+	sphere1->worldMode = GameComponent::from_self_with_parent;
+	sphere1->position = glm::vec3(0, +(height-radius)-0.25f,0);
+	capsule->Attach(sphere1);
+
+	//add second cap
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(radius);
+	sphere2->worldMode = GameComponent::from_self_with_parent;
+	sphere2->position = glm::vec3(0, -(height-radius)+0.25f,0);
+	capsule->Attach(sphere2);
+	Game::Instance()->Attach(capsule);
+	
+
+	//create a rigid body
+	btDefaultMotionState *capMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat), GLToBtVector(pos)));
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, capMotionState, capShape,capInertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	dynamicsWorld->addRigidBody(body);
+	
+	//make a physicsController and attach it
+	shared_ptr<PhysicsController> capControllor = make_shared<PhysicsController>(PhysicsController(capShape, body, capMotionState));
+	capControllor->tag = "Capsule";
+	body->setUserPointer(capControllor.get());
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+	capsule->Attach(capControllor);
+
+	return capControllor;
+}
+
+
 shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat)
 {
 	// Create the shape
@@ -165,6 +208,77 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float
 	return component;
 }
 
+shared_ptr<PhysicsController> PhysicsFactory::CreateRagDoll(glm::vec3 position)
+{
+        float depth = 0.3f;
+        float torsoHeight = 1.5f;
+        float torsoWidth = 1.0f;
+        shared_ptr<PhysicsController> torso = CreateBox(torsoWidth, torsoHeight, depth, position, glm::quat());
+        shared_ptr<PhysicsController> bodyPart;
+        shared_ptr<PhysicsController> secondaryBodyPart;
+        glm::quat q =  glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0));
+        glm::vec3 offset;
+        btHingeConstraint * hinge;
+        btPoint2PointConstraint * ballAndSocket;
+
+        //give the ragDoll a head
+        offset = glm::vec3((torsoWidth/2 - 0.2),torsoHeight,0);
+        bodyPart = CreateCylinder(0.2f,depth,position + offset,q);
+        ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,0.75f,0),btVector3(-0.2,0,0));
+        dynamicsWorld->addConstraint(ballAndSocket);
+        
+        //add an arm
+        offset = glm::vec3(torsoWidth-0.25f,0,0);
+        bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
+        ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(-0.7,0.75,0),btVector3(0,0.3,0));
+        dynamicsWorld->addConstraint(ballAndSocket);
+
+        //add lower arm
+        offset = glm::vec3(torsoWidth-0.25,-(torsoHeight/2),0);
+        secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
+        hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
+        dynamicsWorld->addConstraint(hinge);
+
+        //add another arm
+        offset = glm::vec3(-(torsoWidth-0.25f),0,0);
+        bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
+        ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0.7,0.75,0),btVector3(0,0.3,0));
+        dynamicsWorld->addConstraint(ballAndSocket);
+
+        //add lower arm
+        offset = glm::vec3(-(torsoWidth-0.25),-(torsoHeight/2),0);
+        secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
+        hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
+        dynamicsWorld->addConstraint(hinge);
+
+        //add a leg
+        offset = glm::vec3((torsoWidth/2 - 0.25f),torsoHeight,0);
+        bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
+        ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,-0.75,0),btVector3(0,0.75,0));
+        dynamicsWorld->addConstraint(ballAndSocket);
+
+        //add lower leg
+        offset = glm::vec3(-(torsoWidth-0.25),-(torsoHeight/2),0);
+        secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
+        hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
+        dynamicsWorld->addConstraint(hinge);
+
+
+        //add another leg
+        offset = glm::vec3((torsoWidth/2 + 0.25f),torsoHeight,0);
+        bodyPart = CreateCapsule(depth/2,(torsoHeight/2),position+offset,q);
+        ballAndSocket = new btPoint2PointConstraint(*torso->rigidBody,*bodyPart->rigidBody, btVector3(0,-0.75,0),btVector3(0,0.75,0));
+        dynamicsWorld->addConstraint(ballAndSocket);
+
+        //add lower leg
+        offset = glm::vec3((torsoWidth + 0.25),-(torsoHeight/2),0);
+        secondaryBodyPart = CreateCylinder(depth/2,(torsoHeight/3),position+offset,q);
+        hinge = new btHingeConstraint(*bodyPart->rigidBody,*secondaryBodyPart->rigidBody, btVector3(0,-0.4,0), btVector3(0,0.4,0),btVector3(1,0,0), btVector3(1,0,0));
+        dynamicsWorld->addConstraint(hinge);
+
+        torso->tag = "Ragdoll";
+        return torso;
+} 
 shared_ptr<PhysicsController> PhysicsFactory::CreateCameraPhysics()
 {
 	btVector3 inertia;

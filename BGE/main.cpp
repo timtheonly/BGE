@@ -20,6 +20,7 @@
 #include "Lab8.h"
 #include "Buddha.h"
 #include "Assignment.h"
+#include "CapsuleGame.h"
 
 
 using namespace BGE;
@@ -32,7 +33,6 @@ int main(int argc, char *argv[])
 	// http://www.youtube.com/watch?v=EEbVHxOkTxw
 
 	Assignment game;
-
 
 	game.Run();
 
