@@ -16,11 +16,17 @@ namespace BGE
 		~PhysicsFactory(void);
 
 		shared_ptr<PhysicsController> CreateBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat);
+		shared_ptr<PhysicsController> CreateKinematicBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat);
+
 		shared_ptr<PhysicsController> CreateSphere(float radius, glm::vec3 pos, glm::quat quat);
+
 		shared_ptr<PhysicsController> CreateCylinder(float radius, float height, glm::vec3 pos, glm::quat quat);
+		shared_ptr<PhysicsController> CreateKinematicCylinder(float radius, float height, glm::vec3 pos, glm::quat quat);
+
 		shared_ptr<PhysicsController> CreateCapsule(float radius, float height, glm::vec3 pos, glm::quat quat);
 		shared_ptr<PhysicsController> CreateVehicle(glm::vec3 pos);
 		shared_ptr<PhysicsController> CreateRagDoll(glm::vec3 pos);
+		shared_ptr<PhysicsController> CreatePegBoard(glm::vec3 pos);
 		shared_ptr<PhysicsController> CreateCameraPhysics();
 		shared_ptr<PhysicsController> CreateGroundPhysics();
 		shared_ptr<PhysicsController> CreateFromModel(string name, glm::vec3 pos, glm::quat quat, glm::vec3 scale = glm::vec3(1));

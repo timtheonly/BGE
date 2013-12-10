@@ -177,7 +177,68 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float heigh
 
 	return boxController;
 }
+ shared_ptr<PhysicsController> PhysicsFactory::CreateKinematicCylinder(float radius, float height, glm::vec3 pos, glm::quat quat)
+ {
+ 
+	// Create the shape
+	btCollisionShape * shape = new btCylinderShape(btVector3(radius, height * 0.5f, radius));
+	btScalar mass = 0;
+	btVector3 inertia(0,0,0);
+	shape->calculateLocalInertia(mass,inertia);
 
+	// This is a container for the box model
+	shared_ptr<GameComponent> cyl = make_shared<GameComponent>(Cylinder(radius, height));
+	cyl->position = pos;
+	Game::Instance()->Attach(cyl);
+
+	// Create the rigid body
+	btDefaultMotionState * motionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
+		,GLToBtVector(pos)));			
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass,  motionState, shape, inertia);
+	btRigidBody * body = new btRigidBody(rigidBodyCI);
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	dynamicsWorld->addRigidBody(body);
+
+	// Create the physics component and add it to the box
+	shared_ptr<PhysicsController> component = make_shared<PhysicsController>(PhysicsController(shape, body, motionState));
+	body->setUserPointer(component.get());
+	component->tag = "Cylinder";
+	cyl->Attach(component);
+
+	return component;
+ }
+
+shared_ptr<PhysicsController> PhysicsFactory::CreateKinematicBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat)
+{
+	// Create the shape
+	btCollisionShape * boxShape = new btBoxShape(btVector3(width, height, depth) * 0.50);
+	btScalar mass = 0;
+	btVector3 boxInertia(0,0,0);
+	boxShape->calculateLocalInertia(mass,boxInertia);
+
+	// This is a container for the box model
+	shared_ptr<Box> box = make_shared<Box>(width, height, depth);
+	box->worldMode = GameComponent::from_child;
+	box->position = pos;
+	Game::Instance()->Attach(box);
+
+	// Create the rigid body
+	btDefaultMotionState * boxMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
+		,GLToBtVector(pos)));			
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,  boxMotionState, boxShape, boxInertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	body->setFriction(567);
+	dynamicsWorld->addRigidBody(body);
+
+	// Create the physics component and add it to the box
+	shared_ptr<PhysicsController> boxController = make_shared<PhysicsController>(PhysicsController(boxShape, body, boxMotionState));
+	boxController->tag = "Box";
+	body->setUserPointer(boxController.get());
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	box->Attach(boxController);
+
+	return boxController;
+}
 shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float height, glm::vec3 pos, glm::quat quat)
 {
 	// Create the shape
@@ -279,6 +340,20 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateRagDoll(glm::vec3 position)
         torso->tag = "Ragdoll";
         return torso;
 } 
+
+shared_ptr<PhysicsController> PhysicsFactory::CreatePegBoard(glm::vec3 pos)
+{
+	glm::vec3 offset = glm::vec3(0,10,0);
+	shared_ptr<PhysicsController> pegBoard = CreateKinematicBox(5,10,0.5,pos+offset,glm::quat());
+
+	offset = glm::vec3(0,0,0.25f);
+	shared_ptr<PhysicsController> peg  = CreateKinematicCylinder(1,2,glm::vec3(0),glm::quat());
+	peg->worldMode = GameComponent::from_self_with_parent;
+	peg->position +=  offset;
+	pegBoard->Attach(peg);
+
+	return pegBoard;
+}
 shared_ptr<PhysicsController> PhysicsFactory::CreateCameraPhysics()
 {
 	btVector3 inertia;

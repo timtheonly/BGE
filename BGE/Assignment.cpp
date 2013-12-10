@@ -49,11 +49,12 @@ bool Assignment::Initialise()
 	width = 800;
 	height = 600;
 
-	physicsFactory->CreateCylinder(5.0f,4.0f,glm::vec3(0,0,1),glm::quat());
-	hatFountain = make_shared<ExpansionEffect>();
+	physicsFactory->CreatePegBoard(glm::vec3(-1,2,0));
+	physicsFactory->CreateRagDoll(glm::vec3(-1,10,0));
+	/*hatFountain = make_shared<ExpansionEffect>();
 	hatFountain->position =hat->position;
 	hatFountain->diffuse = glm::vec3(1,0,1);
-	Attach(hatFountain);
+	Attach(hatFountain);*/
 
 	if (!Game::Initialise()) {
 		return false;
