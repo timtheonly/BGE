@@ -218,8 +218,8 @@
     <ClCompile Include="PhysicsDrawer.cpp">
       <Filter>Source Files</Filter>
 </ClCompile>
-    <ClCompile Include="ExpansionEffect.cpp">
-      <Filter>assignment</Filter>t
+	<ClCompile Include="ExpansionEffect.cpp">
+      <Filter>assignment</Filter>
     </ClCompile>
     <ClCompile Include="CapsuleGame.cpp">
       <Filter>Games</Filter>

@@ -46,6 +46,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::
 	Game::Instance()->Attach(component);
 	shared_ptr<Model> model = Content::LoadModel(name);
 	model->Initialise();
+	component->Attach(model);
 
 	std::vector<glm::vec3>::iterator it = model->vertices.begin(); 	
 	btConvexHullShape * tetraShape = new btConvexHullShape();
@@ -227,7 +228,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateKinematicBox(float width, fl
 		,GLToBtVector(pos)));			
 	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,  boxMotionState, boxShape, boxInertia);
 	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
-	body->setFriction(567);
+	body->setFriction(1);
 	dynamicsWorld->addRigidBody(body);
 
 	// Create the physics component and add it to the box
@@ -239,6 +240,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateKinematicBox(float width, fl
 
 	return boxController;
 }
+
 shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float height, glm::vec3 pos, glm::quat quat)
 {
 	// Create the shape
@@ -250,6 +252,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float
 	// This is a container for the box model
 	shared_ptr<GameComponent> cyl = make_shared<GameComponent>(Cylinder(radius, height));
 	cyl->position = pos;
+	cyl->orientation = quat;
 	Game::Instance()->Attach(cyl);
 
 	// Create the rigid body
@@ -341,18 +344,18 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateRagDoll(glm::vec3 position)
         return torso;
 } 
 
-shared_ptr<PhysicsController> PhysicsFactory::CreatePegBoard(glm::vec3 pos)
+void PhysicsFactory::CreateStairs(glm::vec3 pos)
 {
-	glm::vec3 offset = glm::vec3(0,10,0);
-	shared_ptr<PhysicsController> pegBoard = CreateKinematicBox(5,10,0.5,pos+offset,glm::quat());
+	glm::vec3 offset = glm::vec3(0,15,0);
 
-	offset = glm::vec3(0,0,0.25f);
-	shared_ptr<PhysicsController> peg  = CreateKinematicCylinder(1,2,glm::vec3(0),glm::quat());
-	peg->worldMode = GameComponent::from_self_with_parent;
-	peg->position +=  offset;
-	pegBoard->Attach(peg);
+	float pegLength = 4.0f;
+	int numPegs = 15;
 
-	return pegBoard;
+	for(int i = 0;i < numPegs; i++)
+	{
+		CreateKinematicBox(1,1,pegLength,pos+offset-glm::vec3(1+i,1+i,1),glm::quat());
+
+	}
 }
 shared_ptr<PhysicsController> PhysicsFactory::CreateCameraPhysics()
 {
