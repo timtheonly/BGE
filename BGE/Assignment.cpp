@@ -40,7 +40,10 @@ bool Assignment::Initialise()
 	physicsFactory->CreateCameraPhysics();
 
 	physicsFactory->CreateFromModel("hat",glm::vec3(1),glm::quat(),glm::vec3(1));
-
+	
+	hatFountain = make_shared<ExpansionEffect>();
+	hatFountain->position = glm::vec3(1);
+	Attach(hatFountain);
 
 	fullscreen = false;
 	width = 800;
@@ -59,6 +62,7 @@ bool Assignment::Initialise()
 void Assignment::Update(float gameTime)
 {	
 	dynamicsWorld->stepSimulation(gameTime,1);
+	//hatFountain->Update(gameTime);
 	Game::Update(gameTime);
 }
 
